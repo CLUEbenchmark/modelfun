@@ -14,4 +14,4 @@
 7. 模型部署。
 8. 相关评价指标的计算。
 
-具体信息可以查看两个子项目（<a href="https://github.com/CLUEbenchmark/modelfun/tree/docker/modelfun/algorithm/torch_backend">torch_backend</a> 和 <a href="https://github.com/CLUEbenchmark/modelfun/tree/docker/modelfun/algorithm/paddle_backend">paddle_backend</a> 的内容）
+具体信息可以查看两个子项目（<a href="https://github.com/CLUEbenchmark/modelfun/tree/main/modelfun/algorithm/torch_backend">torch_backend</a> 和 <a href="https://github.com/CLUEbenchmark/modelfun/tree/main/modelfun/algorithm/paddle_backend">paddle_backend</a> 的内容）
