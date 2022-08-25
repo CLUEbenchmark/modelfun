@@ -1,0 +1,76 @@
+# Library dependencies for Python code.  You need to install these with
+# `pip install -r requirements.txt` or
+# `conda install --file requirements.txt`
+# to ensure that you can use all Snorkel code.
+# NOTE: all essential packages must be placed under a section named
+# '#### ESSENTIAL ...' so that the script `./scripts/check_requirements.py`
+# can find them.
+
+#### ESSENTIAL LIBRARIES
+
+# General scientific computing
+numpy>=1.16.5,<1.20.0
+scipy>=1.2.0,<2.0.0
+
+# Data storage and function application
+pandas>=1.0.0,<2.0.0
+tqdm>=4.33.0,<5.0.0
+
+# Internal models
+scikit-learn>=0.20.2,<0.25.0
+torch>=1.2.0,<2.0.0
+munkres>=1.0.6
+
+# LF dependency learning
+networkx>=2.2,<2.7
+
+# Model introspection tools
+tensorboard>=2.0.0,<2.7.0
+
+#### EXTRA/TEST LIBRARIES
+
+# spaCy (NLP)
+spacy>=2.1.0,<3.0.0
+blis>=0.3.0,<0.5.0
+
+# Dask (parallelism)
+dask[dataframe]>=2.1.0,<2.31.0
+distributed>=2.1.0,<2.31.0
+
+# Dill (serialization)
+dill>=0.3.0,<0.4.0
+
+# Web related
+fastapi==0.76.0
+uvicorn==0.16.0
+SQLAlchemy==1.4.36
+PyYAML==6.0
+oss2==2.15.0
+pynvml
+minio
+pkuseg
+protobuf==3.19.4
+
+# DL
+transformers==4.18.0
+datasets==2.1.0
+jieba==0.42.1
+bidict==0.21.4
+openai>=0.8.0
+paddlenlp==2.3.0
+paddlepaddle==2.3.0
+wandb
+setuptools_scm
+seqeval==1.2.2
+
+#### DEV TOOLS
+
+black>=22.3
+flake8>=3.7.0,<4.0.0
+isort>=4.3.0,<5.0.0
+mypy==0.720
+pydocstyle>=4.0.0,<5.0.0
+pytest>=5.0.0,<6.0.0
+pytest-cov>=2.7.0,<3.0.0
+pytest-doctestplus>=0.3.0,<0.4.0
+tox>=3.13.0,<4.0.0

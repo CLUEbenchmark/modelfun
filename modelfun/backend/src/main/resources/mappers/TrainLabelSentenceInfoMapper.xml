@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.TrainLabelSentenceInfoMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.TrainLabelSentenceInfoPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_train_label_sentence_info-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="train_record_id" jdbcType="BIGINT" property="trainRecordId" />
+    <result column="data_id" jdbcType="BIGINT" property="dataId" />
+    <result column="sentence" jdbcType="LONGVARCHAR" property="sentence" />
+    <result column="label_actual" jdbcType="VARCHAR" property="labelActual" />
+    <result column="label_predict" jdbcType="VARCHAR" property="labelPredict" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, train_record_id, data_id, sentence, label_actual, label_predict
+  </sql>
+
+  <insert id="copyDataFromTemplate">
+    INSERT INTO mf_train_label_sentence_info
+    (train_record_id, data_id, sentence, label_actual, label_predict)
+    SELECT #{destTrainId,jdbcType=BIGINT},
+           data_id,
+           sentence,
+           label_actual,
+           label_predict
+    FROM mf_train_label_sentence_info_template
+    WHERE train_record_id = #{srcTrainId,jdbcType=BIGINT}
+  </insert>
+</mapper>

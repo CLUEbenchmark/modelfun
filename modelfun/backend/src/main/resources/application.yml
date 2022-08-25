@@ -1,0 +1,98 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: "500MB"
+      max-request-size: "500MB"
+  redis:
+    host: redis
+    port: 6379
+    database: 0
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://mysql:3306/modelfun?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+    username: root
+    password: 123456
+    driverClassName: com.mysql.cj.jdbc.Driver
+  main:
+    allow-circular-references: true
+  sql:
+    init:
+      schema-locations:
+        - classpath*:initSql/mysql/*.sql
+      mode: always
+
+mybatis-plus:
+  mapper-locations: classpath:mappers/*.xml
+logging:
+  config: classpath:log4j2.xml
+com:
+  wl:
+    xc:
+      modelfun:
+        jwt:
+          secret:
+            secret: 'TUWYx1iyVSZ84NOyU4NOcGiO6fJ6aBOBvPX'
+        file:
+          upload:
+            temp-path: "/tmp/tmp_download_file"
+            max-parallel-task: 50
+            oss-prefix: "prod/upload/"
+            oss-temp-path: "temp"
+        event:
+          thread-pool:
+            core-pool-size: 10
+            maximum-pool-size: 20
+            keep-alive-time: 600000
+            queue-capacity: 1000
+        oss:
+          endpoint: http://minio
+          access-key-id: minio-root-user
+          access-key-secret: minio-root-password
+          bucket-name: modelfun
+          port: 9000
+        security:
+          ignore-urls:
+            - '/index.html'
+            - '/css/**'
+            - '/img/**'
+            - '/js/**'
+            - '/login'
+            - '/swagger-ui.html'
+            - '/swagger-ui/**'
+            - '/v3/**'
+            - '/test/**'
+            - '/algorithm/callback'
+            - '/oss/upload'
+        algo:
+          few-shot-url: "http://alg:6674/modelfunAI/fewshot"
+          integrate-path: "http://alg:6674/modelfunAI/labelmodel"
+          train-path: "http://alg:6674/modelfunAI/trainfromlabel"
+          label-function-path: "http://alg:6674/modelfunAI/lf "
+          label-function-test-path: "http://alg:6674/modelfunAI/lftest"
+          keyword-top-path: "http://alg:6674/modelfunAI/keyword"
+          auto-label-path: "http://alg:6674/modelfunAI/labelmodelpredict"
+          gpt-test-url: "http://alg:6674/modelfunAI/gptlftest"
+          gpt3-url: "http://alg:6674/modelfunAI/gptlf"
+          gpt-key: "OcBEjpuPTPkwbBXMnyalMNGqKfOUgnps"
+          ner-one-click-url: "http://alg:6674/modelfunAI/nertuneallinone"
+          gen-lf-url: "http://alg:6674/modelfunAI/autocls"
+          ner-auto-label-url: "http://alg:6674/modelfunAI/nerlabeling"
+          ner-train-url: "http://alg:6674/modelfunAI/nertrain"
+          algorithm-callback-url: "http://backend:8080/modelfun/algorithm/callback"
+springdoc:
+  packages-to-scan: com.wl.xc.modelfun.controller
+  paths-to-match: /**
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
+server:
+  port: 8080
+  servlet:
+    context-path: /modelfun
+  tomcat:
+    max-http-form-post-size: 10MB

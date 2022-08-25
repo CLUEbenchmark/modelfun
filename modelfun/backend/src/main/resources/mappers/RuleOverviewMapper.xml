@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.RuleOverviewMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.RuleOverviewPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_rule_overview-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="accuracy" jdbcType="VARCHAR" property="accuracy" />
+    <result column="conflict" jdbcType="VARCHAR" property="conflict" />
+    <result column="coverage" jdbcType="VARCHAR" property="coverage" />
+    <result column="test_data_coverage" jdbcType="VARCHAR" property="testDataCoverage" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="update_datetime" jdbcType="TIMESTAMP" property="updateDatetime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, accuracy, conflict, coverage, test_data_coverage, create_datetime, update_datetime
+  </sql>
+  <select id="getOneByTaskId" resultType="com.wl.xc.modelfun.entities.po.RuleOverviewPO">
+    select
+    <include refid="Base_Column_List"/>
+    from mf_rule_overview
+    where task_id = #{taskId,jdbcType=BIGINT} limit 1
+  </select>
+  <insert id="insertOrUpdateSelective" keyColumn="id" keyProperty="id" parameterType="com.wl.xc.modelfun.entities.po.RuleOverviewPO" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into mf_rule_overview
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="accuracy != null">
+        accuracy,
+      </if>
+      <if test="conflict != null">
+        conflict,
+      </if>
+      <if test="coverage != null">
+        coverage,
+      </if>
+      <if test="testDataCoverage != null">
+        test_data_coverage,
+      </if>
+      <if test="createDatetime != null">
+        create_datetime,
+      </if>
+      <if test="updateDatetime != null">
+        update_datetime,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="accuracy != null">
+        #{accuracy,jdbcType=VARCHAR},
+      </if>
+      <if test="conflict != null">
+        #{conflict,jdbcType=VARCHAR},
+      </if>
+      <if test="coverage != null">
+        #{coverage,jdbcType=VARCHAR},
+      </if>
+      <if test="testDataCoverage != null">
+        #{testDataCoverage,jdbcType=VARCHAR},
+      </if>
+      <if test="createDatetime != null">
+        #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDatetime != null">
+        #{updateDatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+      <if test="accuracy != null">
+        accuracy = #{accuracy,jdbcType=VARCHAR},
+      </if>
+      <if test="conflict != null">
+        conflict = #{conflict,jdbcType=VARCHAR},
+      </if>
+      <if test="coverage != null">
+        coverage = #{coverage,jdbcType=VARCHAR},
+      </if>
+      <if test="testDataCoverage != null">
+        test_data_coverage = #{testDataCoverage,jdbcType=VARCHAR},
+      </if>
+      <if test="createDatetime != null">
+        create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDatetime != null">
+        update_datetime = #{updateDatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getTemplateByTaskId" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mf_rule_overview_template
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+  </select>
+</mapper>

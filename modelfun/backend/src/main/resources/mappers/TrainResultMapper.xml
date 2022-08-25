@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.TrainResultMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.TrainResultPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_train_result-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="dataset_id" jdbcType="INTEGER" property="datasetId" />
+    <result column="train_count" jdbcType="INTEGER" property="trainCount" />
+    <result column="train_record_id" jdbcType="BIGINT" property="trainRecordId" />
+    <result column="rule_count" jdbcType="INTEGER" property="ruleCount" />
+    <result column="label_type_count" jdbcType="INTEGER" property="labelTypeCount" />
+    <result column="accuracy" jdbcType="VARCHAR" property="accuracy" />
+    <result column="train_precision" jdbcType="VARCHAR" property="trainPrecision" />
+    <result column="coverage" jdbcType="VARCHAR" property="coverage" />
+    <result column="recall" jdbcType="VARCHAR" property="recall" />
+    <result column="f1_score" jdbcType="VARCHAR" property="f1Score" />
+    <result column="module_type" jdbcType="INTEGER" property="moduleType" />
+    <result column="file_address" jdbcType="VARCHAR" property="fileAddress" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="confusion_mx" jdbcType="VARCHAR" property="confusionMx" />
+  </resultMap>
+  <resultMap id="WithTrainRecord" type="com.wl.xc.modelfun.entities.po.TrainResultWithRecordPO" extends="BaseResultMap">
+    <result column="train_record_id" jdbcType="BIGINT" property="trainRecordId" />
+    <result column="model_type" jdbcType="INTEGER" property="modelType" />
+    <result column="train_status" jdbcType="INTEGER" property="trainStatus" />
+    <result column="label_array" jdbcType="VARCHAR" property="labelArray" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, dataset_id, train_count, train_record_id, rule_count, label_type_count, 
+    coverage, accuracy, train_precision, recall, f1_score, module_type, file_address, create_datetime
+  </sql>
+
+  <sql id="Base_Column_List2">
+    <!--@mbg.generated-->
+    id, task_id, dataset_id, train_count, train_record_id, rule_count, label_type_count,
+    coverage, accuracy, train_precision, recall, f1_score, module_type, file_address, create_datetime,
+    confusion_mx
+  </sql>
+
+
+  <select id="selectTrainResult" resultMap="WithTrainRecord">
+    SELECT a.id,
+           a.task_id,
+           a.dataset_id,
+           a.train_count,
+           a.train_record_id,
+           a.rule_count,
+           a.label_type_count,
+           a.coverage,
+           a.accuracy,
+           a.train_precision,
+           a.recall,
+           a.f1_score,
+           a.module_type,
+           a.file_address,
+           a.create_datetime,
+           b.data_version,
+           b.train_file,
+           b.model_type,
+           b.train_status
+    FROM mf_train_result a
+           LEFT JOIN mf_train_records b ON b.id = a.train_record_id
+    WHERE a.task_id = #{taskId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectLatestOneTrainResult" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/>
+    FROM mf_train_result
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+    ORDER BY create_datetime DESC
+    LIMIT 1
+  </select>
+
+  <select id="selectMatrixByTrainId" resultMap="WithTrainRecord">
+    SELECT a.confusion_mx, b.label_array
+    FROM mf_train_result a
+           LEFT JOIN mf_train_records b ON b.id = train_record_id
+    WHERE a.task_id = #{taskId,jdbcType=BIGINT}
+      AND a.train_record_id = #{trainRecordId,jdbcType=BIGINT}
+    LIMIT 1
+  </select>
+
+  <select id="getTemplateByTaskIdAndTrainId" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List2"/>
+    FROM mf_train_result_template
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+      AND train_record_id = #{trainRecordId,jdbcType=BIGINT}
+    ORDER BY create_datetime DESC
+    LIMIT 1
+  </select>
+</mapper>

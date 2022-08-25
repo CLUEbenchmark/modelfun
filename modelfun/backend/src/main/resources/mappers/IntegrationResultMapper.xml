@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.IntegrationResultMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.IntegrationResultPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_integration_result-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="dataset_id" jdbcType="INTEGER" property="datasetId" />
+    <result column="integration_id" jdbcType="BIGINT" property="integrationId" />
+    <result column="rule_id" jdbcType="BIGINT" property="ruleId" />
+    <result column="label_id" jdbcType="INTEGER" property="labelId" />
+    <result column="label_des" jdbcType="VARCHAR" property="labelDes" />
+    <result column="accuracy" jdbcType="VARCHAR" property="accuracy" />
+    <result column="coverage" jdbcType="VARCHAR" property="coverage" />
+    <result column="repeat" jdbcType="VARCHAR" property="repeat" />
+    <result column="conflict" jdbcType="VARCHAR" property="conflict" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+  </resultMap>
+
+  <resultMap id="IntegrationWithRule" type="com.wl.xc.modelfun.entities.po.IntegrationWithRule" extends="BaseResultMap">
+    <result column="rule_name" jdbcType="VARCHAR" property="ruleName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, dataset_id, integration_id, rule_id, label_id, label_des, accuracy, coverage,
+    `repeat`, conflict, create_datetime
+  </sql>
+
+  <select id="pageResultByTaskId" resultMap="IntegrationWithRule">
+    SELECT
+    i.id, i.task_id, i.dataset_id, i.integration_id, i.rule_id, i.label_id, i.label_des, i.accuracy, i.coverage,
+    i.`repeat`, i.conflict, i.create_datetime, r.rule_name
+    FROM
+      mf_integration_result i
+      LEFT JOIN mf_rule_info r ON i.rule_id = r.id
+    WHERE
+    i.task_id = #{taskId}
+  </select>
+</mapper>

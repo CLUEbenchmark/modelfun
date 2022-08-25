@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.RuleUnlabeledResultForBatchMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.RuleUnlabeledResultPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_rule_unlabeled_result-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="rule_id" jdbcType="BIGINT" property="ruleId" />
+    <result column="sentence_id" jdbcType="BIGINT" property="sentenceId" />
+    <result column="label_id" jdbcType="INTEGER" property="labelId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, rule_id, sentence_id, label_id
+  </sql>
+
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.wl.xc.modelfun.entities.po.RuleUnlabeledResultPO" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into mf_rule_unlabeled_result
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="ruleId != null">
+        rule_id,
+      </if>
+      <if test="sentenceId != null">
+        sentence_id,
+      </if>
+      <if test="labelId != null">
+        label_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="ruleId != null">
+        #{ruleId,jdbcType=BIGINT},
+      </if>
+      <if test="sentenceId != null">
+        #{sentenceId,jdbcType=BIGINT},
+      </if>
+      <if test="labelId != null">
+        #{labelId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

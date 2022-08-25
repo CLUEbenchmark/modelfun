@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.NerTestDataMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.NerTestDataPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_ner_test_data-->
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="task_id" jdbcType="BIGINT" property="taskId"/>
+    <result column="data_id" jdbcType="BIGINT" property="dataId"/>
+    <result column="sentence" jdbcType="LONGVARCHAR" property="sentence"/>
+    <result column="relations" jdbcType="VARCHAR" property="relations"/>
+    <result column="show_data" jdbcType="INTEGER" property="showData"/>
+    <result column="data_type" jdbcType="INTEGER" property="dataType"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id,
+    task_id,
+    data_id,
+    sentence,
+    relations,
+    show_data,
+    data_type
+  </sql>
+
+  <select id="pageNerTestData" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mf_ner_test_data
+    WHERE task_id = #{po.taskId,jdbcType=BIGINT}
+      AND data_type = #{po.dataType,jdbcType=INTEGER}
+    <if test="po.sentence != null and po.sentence != ''">
+      AND sentence LIKE CONCAT('%', #{po.sentence,jdbcType=LONGVARCHAR}, '%')
+    </if>
+    <if test="po.showData != null">
+      AND show_data = #{po.showData,jdbcType=INTEGER}
+    </if>
+    <if test="label != null">
+      AND data_id IN (SELECT sentence_id
+                      FROM `mf_ner_data_label`
+                      WHERE task_id = #{po.taskId,jdbcType=BIGINT}
+                        AND label_id = #{label,jdbcType=INTEGER}
+                      GROUP BY sentence_id)
+    </if>
+    <if test="isDesc">
+      order by data_id DESC
+    </if>
+  </select>
+
+  <select id="selectMaxSentenceId" resultType="java.lang.Long">
+    SELECT MAX(data_id)
+    FROM mf_ner_test_data
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+      AND data_type = #{dataType,jdbcType=INTEGER}
+  </select>
+
+  <select id="countUnLabeledData" resultType="int">
+    SELECT COUNT(1)
+    FROM mf_ner_test_data a
+    WHERE a.task_id = #{taskId,jdbcType=BIGINT}
+      AND a.data_type = #{dataType,jdbcType=INTEGER}
+      AND a.data_id NOT IN (SELECT DISTINCT sentence_id
+                            FROM mf_ner_data_label b
+                            WHERE b.task_id = #{taskId,jdbcType=BIGINT}
+                              AND b.data_type = #{dataType,jdbcType=INTEGER})
+  </select>
+
+  <insert id="copyDataFromTemplate">
+    INSERT INTO mf_ner_test_data (task_id, data_id, sentence, relations, show_data, data_type)
+    SELECT #{destTask,jdbcType=BIGINT},
+           data_id,
+           sentence,
+           relations,
+           show_data,
+           data_type
+    FROM mf_ner_test_data_template
+    WHERE task_id = #{srcTask,jdbcType=BIGINT}
+  </insert>
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.DatasetDetailMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.DatasetDetailPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_dataset_detail-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="dataset_id" jdbcType="INTEGER" property="dataSetId" />
+    <result column="file_type" jdbcType="INTEGER" property="fileType" />
+    <result column="file_address" jdbcType="VARCHAR" property="fileAddress" />
+    <result column="update_datetime" jdbcType="TIMESTAMP" property="updateDatetime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, dataset_id, file_type, file_address, update_datetime
+  </sql>
+
+  <insert id="insertOrUpdate" keyColumn="id" keyProperty="id" parameterType="com.wl.xc.modelfun.entities.po.DatasetDetailPO" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into mf_dataset_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      task_id,
+      dataset_id,
+      file_type,
+      file_address,
+      update_datetime,
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      #{taskId,jdbcType=BIGINT},
+      #{dataSetId,jdbcType=INTEGER},
+      #{fileType,jdbcType=INTEGER},
+      #{fileAddress,jdbcType=VARCHAR},
+      now(),
+    </trim>
+    on duplicate key update
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      dataset_id = #{dataSetId,jdbcType=INTEGER},
+      file_address = #{fileAddress,jdbcType=VARCHAR},
+      update_datetime = now(),
+    </trim>
+  </insert>
+
+  <select id="getTemplateByTaskId" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> FROM mf_dataset_detail_template WHERE task_id = #{taskId,jdbcType=BIGINT}
+  </select>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.UnlabelDataMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.UnlabelDataPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_unlabel_data-->
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="task_id" jdbcType="BIGINT" property="taskId"/>
+    <result column="data_set_id" jdbcType="INTEGER" property="dataSetId"/>
+    <result column="data_id" jdbcType="BIGINT" property="dataId"/>
+    <result column="label" jdbcType="INTEGER" property="label"/>
+    <result column="sentence" jdbcType="LONGVARCHAR" property="sentence"/>
+    <result column="label_des" jdbcType="LONGVARCHAR" property="labelDes"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, data_set_id, data_id, `label`, sentence, label_des
+  </sql>
+
+  <select id="pageByTaskId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from mf_unlabel_data
+    where task_id = #{taskId,jdbcType=BIGINT}
+    ORDER BY id
+    limit #{offset}, #{size}
+  </select>
+
+  <update id="clearOldLabel">
+    update mf_unlabel_data
+    set label = NULL
+    where task_id = #{taskId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectNoGptCache" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mf_unlabel_data
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+      AND data_id NOT IN
+          (SELECT sentence_id FROM mf_gpt_cache WHERE task_id = #{taskId,jdbcType=BIGINT} AND data_type = 2)
+  </select>
+
+  <select id="getMaxIdByTask" resultType="java.lang.Long">
+    SELECT max(data_id)
+    FROM mf_unlabel_data
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+  </select>
+
+  <insert id="copyUnlabelDataFromTemplate">
+    INSERT INTO mf_unlabel_data(task_id, data_set_id, data_id, label, sentence, label_des)
+    SELECT #{destTask,jdbcType=BIGINT}, #{datasetId,jdbcType=INTEGER}, data_id, label, sentence, label_des
+    FROM mf_unlabel_data_template
+    WHERE task_id = #{srcTask,jdbcType=BIGINT}
+  </insert>
+</mapper>

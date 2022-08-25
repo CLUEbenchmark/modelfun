@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.TrainRecordsMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.TrainRecordsPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_train_records-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="dataset_id" jdbcType="INTEGER" property="datasetId" />
+    <result column="data_version" jdbcType="VARCHAR" property="dataVersion" />
+    <result column="train_status" jdbcType="INTEGER" property="trainStatus" />
+    <result column="train_file" jdbcType="VARCHAR" property="trainFile" />
+    <result column="model_type" jdbcType="INTEGER" property="modelType" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="update_datetime" jdbcType="TIMESTAMP" property="updateDatetime" />
+    <result column="label_count" jdbcType="INTEGER" property="labelCount" />
+    <result column="rule_count" jdbcType="INTEGER" property="ruleCount" />
+    <result column="train_count" jdbcType="INTEGER" property="trainCount" />
+    <result column="label_array" jdbcType="VARCHAR" property="labelArray" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, dataset_id, data_version, train_status, train_file, model_type, create_datetime, update_datetime,
+    label_count, rule_count, train_count
+  </sql>
+
+  <select id="getLastTrainRecord" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from mf_train_records
+    where task_id = #{taskId,jdbcType=BIGINT}
+    order by update_datetime desc
+    limit 1
+  </select>
+
+  <select id="selectLatestDataVersion" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from mf_train_records
+    where task_id = #{taskId,jdbcType=BIGINT}
+    AND train_status = 1
+    AND data_version IS NOT NULL
+    order by update_datetime desc
+    limit 1
+  </select>
+
+  <select id="getTemplateByTaskId" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>, label_array
+    FROM mf_train_records_template
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+    ORDER BY update_datetime DESC
+    LIMIT 1
+  </select>
+</mapper>

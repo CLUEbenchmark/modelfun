@@ -1,0 +1,6 @@
+_MAJOR = "1"
+_MINOR = "0"
+_REVISION = "0"
+
+VERSION_SHORT = f"{_MAJOR}.{_MINOR}"
+VERSION = f"{_MAJOR}.{_MINOR}.{_REVISION}"

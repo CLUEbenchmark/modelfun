@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.IntegrationRecordsMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.IntegrationRecordsPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_integration_records-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="dataset_id" jdbcType="INTEGER" property="datasetId" />
+    <result column="result_file_address" jdbcType="VARCHAR" property="resultFileAddress" />
+    <result column="labeled" jdbcType="INTEGER" property="labeled" />
+    <result column="vote_model_address" jdbcType="VARCHAR" property="voteModelAddress" />
+    <result column="mapping_model_address" jdbcType="VARCHAR" property="mappingModelAddress" />
+    <result column="integrate_status" jdbcType="INTEGER" property="integrateStatus" />
+    <result column="test_accuracy" jdbcType="VARCHAR" property="testAccuracy" />
+    <result column="test_recall" jdbcType="VARCHAR" property="testRecall" />
+    <result column="test_f1_score" jdbcType="VARCHAR" property="testF1Score" />
+    <result column="train_label_count" jdbcType="INTEGER" property="trainLabelCount" />
+    <result column="train_sentence_count" jdbcType="BIGINT" property="trainSentenceCount" />
+    <result column="unlabel_coverage" jdbcType="VARCHAR" property="unlabelCoverage" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="update_datetime" jdbcType="TIMESTAMP" property="updateDatetime" />
+    <result column="time_cost" jdbcType="INTEGER" property="timeCost" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, dataset_id, result_file_address, labeled,vote_model_address,mapping_model_address, integrate_status,
+    test_accuracy, test_recall, test_f1_score,
+    train_label_count, train_sentence_count, unlabel_coverage, create_datetime, update_datetime, time_cost
+  </sql>
+
+  <select id="getLastIntegrationRecord" resultType="com.wl.xc.modelfun.entities.po.IntegrationRecordsPO">
+    select
+    <include refid="Base_Column_List"/>
+    from mf_integration_records
+    where task_id = #{taskId,jdbcType=BIGINT}
+    order by update_datetime desc
+    limit 1
+  </select>
+
+  <select id="getLastSuccessLabeledRecord" resultType="com.wl.xc.modelfun.entities.po.IntegrationRecordsPO">
+    select
+    <include refid="Base_Column_List"/>
+    from mf_integration_records
+    where task_id = #{taskId,jdbcType=BIGINT}
+    AND labeled = 2
+    order by update_datetime desc
+    limit 1
+  </select>
+
+  <select id="getTemplateByTaskId" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mf_integration_records_template
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+    ORDER BY update_datetime DESC
+    LIMIT 1
+  </select>
+</mapper>

@@ -1,0 +1,15 @@
+com:
+  wl:
+    xc:
+      modelfun:
+        oss:
+          # minio 访问地址
+          endpoint: http://minio
+          # minio用户名
+          access-key-id: minio-root-user
+          # minio 密码
+          access-key-secret: minio-root-password
+          # minio bucket name
+          bucket-name: modelfun
+          # minio端口号
+          port: 9000

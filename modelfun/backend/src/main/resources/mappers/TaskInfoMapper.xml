@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.TaskInfoMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.TaskInfoPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_task_info-->
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    <result column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="domain" jdbcType="VARCHAR" property="domain"/>
+    <result column="task_type" jdbcType="INTEGER" property="taskType"/>
+    <result column="language_type" jdbcType="INTEGER" property="languageType"/>
+    <result column="keyword" jdbcType="VARCHAR" property="keyword"/>
+    <result column="task_desc" jdbcType="VARCHAR" property="description"/>
+    <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+    <result column="create_people" jdbcType="VARCHAR" property="createPeople"/>
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime"/>
+    <result column="update_people" jdbcType="VARCHAR" property="updatePeople"/>
+    <result column="update_datetime" jdbcType="TIMESTAMP" property="updateDatetime"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, user_id, `name`, `domain`, task_type, language_type, keyword, task_desc, deleted,
+    create_people, create_datetime, update_people, update_datetime
+  </sql>
+
+  <resultMap id="taskInfoMap" type="com.wl.xc.modelfun.entities.vo.TaskInfoVO" extends="BaseResultMap">
+    <result column="label_count" jdbcType="BIGINT" property="labeledCount"/>
+    <result column="unlabel_count" jdbcType="BIGINT" property="unlabeledCount"/>
+  </resultMap>
+
+  <select id="getTaskInfoListByNameAndDes" resultMap="taskInfoMap">
+    <!--@mbg.generated-->
+    SELECT
+    a.id,
+    a.user_id,
+    a.`name`,
+    a.`domain`,
+    a.task_type,
+    a.language_type,
+    a.keyword,
+    a.task_desc,
+    a.deleted,
+    a.create_people,
+    a.create_datetime,
+    a.update_people,
+    a.update_datetime,
+    CASE WHEN a.task_type = 1 THEN ( SELECT COUNT( 1 ) FROM mf_integrate_label_result c WHERE c.task_id = a.id )
+    WHEN a.task_type = 2 THEN ( SELECT COUNT( 1 ) FROM mf_ner_auto_label_result d WHERE d.task_id = a.id ) END AS label_count,
+    (SELECT COUNT(1) FROM mf_unlabel_data e WHERE e.task_id = a.id) AS unlabel_count
+    from mf_task_info a
+    where user_id = #{userId}
+    <if test="name != null and name != ''">
+      and name like concat('%', #{name}, '%')
+    </if>
+    <if test="description != null and description != ''">
+      and task_desc like concat('%', #{description}, '%')
+    </if>
+    <if test="taskType != null">
+      and task_type = #{taskType, jdbcType=INTEGER}
+    </if>
+    and deleted = 0
+    order by update_datetime desc
+  </select>
+
+  <delete id="logicDelete">
+    <!--@mbg.generated-->
+    update mf_task_info
+    set deleted         = 1
+      , update_datetime = now()
+    <if test="updatePeople != null and updatePeople != ''">
+      , update_people = #{updatePeople,jdbcType=VARCHAR}
+    </if>
+    where id = #{taskId,jdbcType=BIGINT}
+  </delete>
+
+  <select id="getTaskTemplateByType" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mf_task_info_template
+    WHERE task_type = #{taskType,jdbcType=INTEGER}
+      AND deleted = 0
+    ORDER BY create_datetime DESC
+    LIMIT 1
+  </select>
+</mapper>

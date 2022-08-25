@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.SysDictMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.SysDictPO">
+    <!--@mbg.generated-->
+    <!--@Table sys_dict-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="map_key" jdbcType="VARCHAR" property="mapKey" />
+    <result column="map_value" jdbcType="VARCHAR" property="mapValue" />
+    <result column="map_group" jdbcType="VARCHAR" property="mapGroup" />
+    <result column="map_desc" jdbcType="VARCHAR" property="mapDesc" />
+    <result column="map_sort" jdbcType="VARCHAR" property="mapSort" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="create_people" jdbcType="VARCHAR" property="createPeople" />
+    <result column="update_datetime" jdbcType="TIMESTAMP" property="updateDatetime" />
+    <result column="update_people" jdbcType="VARCHAR" property="updatePeople" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, map_key, map_value, map_group, map_desc, map_sort , create_datetime, create_people, update_datetime,
+    update_people
+  </sql>
+</mapper>

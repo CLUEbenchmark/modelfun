@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.NerDataLabelMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.NerDataLabelPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_ner_data_label-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="sentence_id" jdbcType="BIGINT" property="sentenceId" />
+    <result column="label_id" jdbcType="INTEGER" property="labelId" />
+    <result column="start_offset" jdbcType="INTEGER" property="startOffset" />
+    <result column="end_offset" jdbcType="INTEGER" property="endOffset" />
+    <result column="data_id" jdbcType="BIGINT" property="dataId" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
+  </resultMap>
+
+  <resultMap id="WithLabelDes" type="com.wl.xc.modelfun.entities.po.NerDataLabelWithDesPO" extends="BaseResultMap">
+    <result column="label_desc" jdbcType="VARCHAR" property="labelDesc" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, sentence_id, label_id, start_offset, end_offset, data_id, data_type
+  </sql>
+
+  <select id="getBySentenceId" resultMap="WithLabelDes">
+    SELECT a.id,
+           a.task_id,
+           a.sentence_id,
+           a.label_id,
+           a.start_offset,
+           a.end_offset,
+           a.data_id,
+           b.label_desc
+    FROM mf_ner_data_label a
+           LEFT JOIN mf_label_info b ON b.task_id = a.task_id
+      AND b.label_id = a.label_id
+    WHERE a.task_id = #{taskId,jdbcType=BIGINT} AND a.data_type = #{dataType,jdbcType=INTEGER}
+    <if test="sentenceIds != null and sentenceIds.size() != 0">
+      AND a.sentence_id IN
+      <foreach collection="sentenceIds" item="sentenceId" open="(" separator="," close=")">
+        #{sentenceId,jdbcType=BIGINT}
+      </foreach>
+    </if>
+  </select>
+
+  <insert id="copyDataFromTemplate">
+    INSERT INTO mf_ner_data_label (task_id, sentence_id, label_id, start_offset, end_offset, data_id, data_type)
+    SELECT #{destTask,jdbcType=BIGINT}, sentence_id, label_id, start_offset, end_offset, data_id, data_type
+    FROM mf_ner_data_label_template
+    WHERE task_id = #{srcTask,jdbcType=BIGINT}
+  </insert>
+</mapper>

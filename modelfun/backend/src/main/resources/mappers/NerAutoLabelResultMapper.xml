@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.NerAutoLabelResultMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.NerAutoLabelResultPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_ner_auto_label_result-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="sentence_id" jdbcType="BIGINT" property="sentenceId" />
+    <result column="sentence" jdbcType="LONGVARCHAR" property="sentence" />
+    <result column="relations" jdbcType="LONGVARCHAR" property="relations" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, sentence_id, sentence, relations, data_type
+  </sql>
+
+  <select id="pageAutoLabelResult" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mf_ner_auto_label_result
+    WHERE task_id = #{po.taskId,jdbcType=BIGINT} AND data_type = #{po.dataType,jdbcType=INTEGER}
+    <if test="po.sentence != null and po.sentence != ''">
+      AND sentence LIKE CONCAT('%', #{po.sentence,jdbcType=LONGVARCHAR}, '%')
+    </if>
+    <if test="label != null">
+      AND sentence_id IN (SELECT sentence_id
+      FROM `mf_ner_auto_label_map`
+      WHERE task_id = #{po.taskId,jdbcType=BIGINT}
+      AND label_id = #{label,jdbcType=INTEGER}
+      GROUP BY sentence_id)
+    </if>
+  </select>
+
+  <insert id="copyAutoLabelResultFromTemplate">
+    INSERT INTO mf_ner_auto_label_result (task_id, sentence_id, sentence, relations, data_type)
+    SELECT #{destTask,jdbcType=BIGINT},
+           sentence_id,
+           sentence,
+           relations,
+           data_type
+    FROM mf_ner_auto_label_result_template
+    WHERE task_id = #{srcTask,jdbcType=BIGINT}
+  </insert>
+</mapper>

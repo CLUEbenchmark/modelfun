@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.IntegrateLabelResultForBatchMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.IntegrateLabelResultPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_integrate_label_result-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="dataset_id" jdbcType="BIGINT" property="datasetId" />
+    <result column="sentence_id" jdbcType="BIGINT" property="sentenceId" />
+    <result column="sentence" jdbcType="LONGVARCHAR" property="sentence" />
+    <result column="label_id" jdbcType="INTEGER" property="labelId" />
+    <result column="label_des" jdbcType="VARCHAR" property="labelDes" />
+    <result column="op_status" jdbcType="INTEGER" property="opStatus" />
+    <result column="used" jdbcType="TINYINT" property="used" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, dataset_id, sentence_id, sentence, label_id, label_des, op_status, used, data_type
+  </sql>
+
+  <insert id="insertSelective" parameterType="com.wl.xc.modelfun.entities.po.IntegrateLabelResultPO" >
+    <!--@mbg.generated-->
+    insert into mf_integrate_label_result
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="datasetId != null">
+        dataset_id,
+      </if>
+      <if test="sentenceId != null">
+        sentence_id,
+      </if>
+      <if test="sentence != null">
+        sentence,
+      </if>
+      <if test="labelId != null">
+        label_id,
+      </if>
+      <if test="labelDes != null">
+        label_des,
+      </if>
+      <if test="opStatus != null">
+        op_status,
+      </if>
+      <if test="used != null">
+        used,
+      </if>
+      <if test="dataType != null">
+        data_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="datasetId != null">
+        #{datasetId,jdbcType=BIGINT},
+      </if>
+      <if test="sentenceId != null">
+        #{sentenceId,jdbcType=BIGINT},
+      </if>
+      <if test="sentence != null">
+        #{sentence,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="labelId != null">
+        #{labelId,jdbcType=INTEGER},
+      </if>
+      <if test="labelDes != null">
+        #{labelDes,jdbcType=VARCHAR},
+      </if>
+      <if test="opStatus != null">
+        #{opStatus,jdbcType=INTEGER},
+      </if>
+      <if test="used != null">
+        #{used,jdbcType=TINYINT},
+      </if>
+      <if test="dataType != null">
+        #{dataType,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.NerDataLabelForBatchMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.NerDataLabelPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_ner_data_label-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="sentence_id" jdbcType="BIGINT" property="sentenceId" />
+    <result column="label_id" jdbcType="INTEGER" property="labelId" />
+    <result column="start_offset" jdbcType="INTEGER" property="startOffset" />
+    <result column="end_offset" jdbcType="INTEGER" property="endOffset" />
+    <result column="data_id" jdbcType="BIGINT" property="dataId" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, sentence_id, label_id, start_offset, end_offset, data_id, data_type
+  </sql>
+
+  <insert id="insertSelective" parameterType="com.wl.xc.modelfun.entities.po.NerDataLabelPO">
+    <!--@mbg.generated-->
+    insert into mf_ner_data_label
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="sentenceId != null">
+        sentence_id,
+      </if>
+      <if test="labelId != null">
+        label_id,
+      </if>
+      <if test="startOffset != null">
+        start_offset,
+      </if>
+      <if test="endOffset != null">
+        end_offset,
+      </if>
+      <if test="dataId != null">
+        data_id,
+      </if>
+      <if test="dataType != null">
+        data_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="sentenceId != null">
+        #{sentenceId,jdbcType=BIGINT},
+      </if>
+      <if test="labelId != null">
+        #{labelId,jdbcType=INTEGER},
+      </if>
+      <if test="startOffset != null">
+        #{startOffset,jdbcType=INTEGER},
+      </if>
+      <if test="endOffset != null">
+        #{endOffset,jdbcType=INTEGER},
+      </if>
+      <if test="dataId != null">
+        #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="dataType != null">
+        #{dataType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

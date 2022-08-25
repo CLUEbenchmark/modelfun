@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.NerTestDataForBatchMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.NerTestDataPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_ner_test_data-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="data_id" jdbcType="BIGINT" property="dataId" />
+    <result column="sentence" jdbcType="LONGVARCHAR" property="sentence" />
+    <result column="relations" jdbcType="VARCHAR" property="relations" />
+    <result column="show_data" jdbcType="INTEGER" property="showData" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, data_id, sentence, relations, show_data, data_type
+  </sql>
+
+  <insert id="insertSelective" parameterType="com.wl.xc.modelfun.entities.po.NerTestDataPO">
+    <!--@mbg.generated-->
+    insert into mf_ner_test_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        task_id,
+      </if>
+      <if test="dataId != null">
+        data_id,
+      </if>
+      <if test="sentence != null">
+        sentence,
+      </if>
+      <if test="relations != null">
+        relations,
+      </if>
+      <if test="showData != null">
+        show_data,
+      </if>
+      <if test="dataType != null">
+        data_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="dataId != null">
+        #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="sentence != null">
+        #{sentence,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="relations != null">
+        #{relations,jdbcType=VARCHAR},
+      </if>
+      <if test="showData != null">
+        #{showData,jdbcType=INTEGER},
+      </if>
+      <if test="dataType != null">
+        #{dataType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

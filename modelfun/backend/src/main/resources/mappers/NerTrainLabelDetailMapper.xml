@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.NerTrainLabelDetailMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.NerTrainLabelDetailPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_ner_train_label_detail-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="train_label_id" jdbcType="BIGINT" property="trainLabelId" />
+    <result column="data_id" jdbcType="LONGVARCHAR" property="dataId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, train_label_id, data_id
+  </sql>
+
+  <insert id="copyDataFromTemplate">
+    INSERT INTO mf_ner_train_label_detail
+    (train_label_id, data_id)
+    SELECT #{destTrainId,jdbcType=BIGINT},
+           data_id
+    FROM mf_ner_train_label_detail_template
+    WHERE train_label_id = #{srcTrainId,jdbcType=BIGINT}
+  </insert>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.DatasetInfoMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.DatasetInfoPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_dataset_info-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="dataset_address" jdbcType="VARCHAR" property="datasetAddress" />
+    <result column="dataset_desc" jdbcType="VARCHAR" property="datasetDesc" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="create_poeple" jdbcType="VARCHAR" property="createPoeple" />
+    <result column="update_datetime" jdbcType="TIMESTAMP" property="updateDatetime" />
+    <result column="update_people" jdbcType="VARCHAR" property="updatePeople" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, `name`, task_id, dataset_address, dataset_desc, create_datetime, create_poeple, 
+    update_datetime, update_people, deleted
+  </sql>
+
+  <select id="selectOneLastDatasetInfo" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select
+    <include refid="Base_Column_List"/>
+    from mf_dataset_info
+    where deleted = false
+    AND task_id = #{taskId,jdbcType=BIGINT}
+    order by update_datetime desc
+    limit 1
+  </select>
+
+  <select id="getTemplateByTaskId" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/> FROM mf_dataset_info_template
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+    AND deleted = false
+    ORDER BY create_datetime DESC
+    LIMIT 1
+  </select>
+</mapper>

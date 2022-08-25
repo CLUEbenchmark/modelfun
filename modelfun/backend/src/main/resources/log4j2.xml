@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="WARN" monitorInterval="30000">
+  <Properties>
+    <!--web项目中当前目录为tomcat等服务器的bin目录，可以自己改为工程目录-->
+    <property name="log.path">/var/log/backend</property>
+    <property name="project.name">modelFun</property>
+  </Properties>
+  <appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout charset="UTF-8">
+        <Pattern>
+          [%4sn] %d -- %-5level-- [%T]-[%t] %c: %msg%n%throwable
+        </Pattern>
+      </PatternLayout>
+      <Filters>
+        <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+      </Filters>
+    </Console>
+    <RollingFile name="ROLLING_FILE_DEBUG" fileName="${log.path}/${project.name}-debug.log"
+      filePattern="${log.path}/debug/${project.name}-%d{yyyy-MM-dd}-debug-%i.log">
+      <PatternLayout charset="UTF-8" pattern="%d{yyyy-MM-dd HH:mm:ss,SSS}:%p [%t] %C.%M(%L) | %m%n%throwable"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+        <SizeBasedTriggeringPolicy size="500 MB"/>
+      </Policies>
+      <!--最大日志文件数-->
+      <DefaultRolloverStrategy max="50">
+        <!--最大深度，如果深度是1则搜索本目录下的所有文件，深度加深则以此类推，默认1-->
+        <Delete basePath="${path}/debug" maxDepth="1">
+          <!--正则表达式-->
+          <IfFileName regex="(.)+debug(.)*\.log$"/>
+          <!--删除超过10天的日志-->
+          <IfLastModified age="30d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+      <Filters>
+        <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+      </Filters>
+    </RollingFile>
+  </appenders>
+  <loggers>
+    <root level="info">
+      <appender-ref ref="Console"/>
+      <appender-ref ref="ROLLING_FILE_DEBUG"/>
+    </root>
+    <logger name="org.springframework" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper" level="debug"/>
+    <logger name="com.wl.xc.modelfun.mapper.GptCacheMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.TestDataForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.UnlabelDataForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.LabelInfoForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.RuleUnlabeledResultForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.RuleResultForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.IntegrateLabelResultForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.NerTestDataForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.NerDataLabelForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.NerAutoLabelMapForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.NerAutoLabelResultForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.NerTrainLabelDetailForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.TrainLabelSentenceInfoForBatchMapper" level="info"/>
+    <logger name="com.wl.xc.modelfun.mapper.NerTrainLabelResultForBatchMapper" level="info"/>
+  </loggers>
+</configuration>

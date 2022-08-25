@@ -1,0 +1,11 @@
+tmp/*
+paddlener/tmp/*
+datasets/*
+uie-base/*
+uie-tiny/*
+paddlecls/ptunning/checkpoint/*
+paddlecls/efl/checkpoint/*
+.git/*
+uvicorn.*
+build/*
+build.zip

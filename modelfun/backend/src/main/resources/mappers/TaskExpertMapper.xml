@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.TaskExpertMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.TaskExpertPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_task_expert-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="file_address" jdbcType="VARCHAR" property="fileAddress" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, file_name, file_address, create_datetime
+  </sql>
+</mapper>

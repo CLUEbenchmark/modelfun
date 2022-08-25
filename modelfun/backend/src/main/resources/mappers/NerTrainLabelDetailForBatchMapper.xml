@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.NerTrainLabelDetailForBatchMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.NerTrainLabelDetailPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_ner_train_label_detail-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="train_label_id" jdbcType="BIGINT" property="trainLabelId" />
+    <result column="data_id" jdbcType="LONGVARCHAR" property="dataId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, train_label_id, data_id
+  </sql>
+
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.wl.xc.modelfun.entities.po.NerTrainLabelDetailPO" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into mf_ner_train_label_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="trainLabelId != null">
+        train_label_id,
+      </if>
+      <if test="dataId != null">
+        data_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="trainLabelId != null">
+        #{trainLabelId,jdbcType=BIGINT},
+      </if>
+      <if test="dataId != null">
+        #{dataId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>

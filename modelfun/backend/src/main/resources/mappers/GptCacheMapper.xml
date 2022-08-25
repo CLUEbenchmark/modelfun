@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.GptCacheMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.GptCachePO">
+    <!--@mbg.generated-->
+    <!--@Table mf_gpt_cache-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
+    <result column="sentence_id" jdbcType="BIGINT" property="sentenceId" />
+    <result column="rule_id" jdbcType="BIGINT" property="ruleId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, data_type, sentence_id, rule_id
+  </sql>
+
+  <select id="selectCachedId" resultType="long">
+    <!--@mbg.generated-->
+    SELECT
+    sentence_id
+    FROM mf_gpt_cache
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+      AND data_type = #{dataType,jdbcType=INTEGER}
+  </select>
+
+</mapper>

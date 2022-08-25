@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.RuleResultMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.RuleResultPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_rule_result-->
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="task_id" jdbcType="BIGINT" property="taskId"/>
+    <result column="rule_id" jdbcType="BIGINT" property="ruleId"/>
+    <result column="sentence_id" jdbcType="BIGINT" property="sentenceId"/>
+    <result column="label_id" jdbcType="INTEGER" property="labelId"/>
+    <result column="show_data" jdbcType="INTEGER" property="showData"/>
+    <result column="data_type" jdbcType="INTEGER" property="dataType"/>
+  </resultMap>
+
+  <resultMap id="RuleVote" type="com.wl.xc.modelfun.entities.po.RuleVotePO">
+    <!--@mbg.generated-->
+    <!--@Table mf_rule_result-->
+    <result column="sentence_id" jdbcType="BIGINT" property="sentenceId"/>
+    <result column="label_vote" jdbcType="VARCHAR" property="labelVote"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, rule_id, sentence_id, label_id, show_data, data_type
+  </sql>
+
+  <select id="selectRuleVote" resultMap="RuleVote">
+    <!--@mbg.generated-->
+    select a.sentence_id                          AS sentence_id,
+           group_concat(a.label_id separator ',') AS label_vote
+    from mf_rule_result a
+    where task_id = #{taskId, jdbcType=BIGINT} AND data_type = 4
+    group by a.sentence_id
+  </select>
+
+  <select id="selectTestDataVoteGroup" resultMap="RuleVote">
+    SELECT a.data_id as sentence_id,
+           b.label_vote
+    FROM mf_test_data a
+           LEFT JOIN (SELECT sentence_id, group_concat(cc.label_id SEPARATOR ',') AS label_vote
+                      FROM mf_rule_result cc
+                      WHERE cc.task_id = #{taskId, jdbcType=BIGINT} AND cc.data_type = #{dataType, jdbcType=INTEGER}
+                      GROUP BY cc.sentence_id) b ON a.data_id = b.sentence_id
+    WHERE a.task_id = #{taskId, jdbcType=BIGINT} AND a.data_type = #{dataType, jdbcType=INTEGER}
+    LIMIT #{offset}, #{size}
+  </select>
+
+  <select id="getMistakeByTaskIdAndRule" resultType="com.wl.xc.modelfun.entities.vo.RuleMistakeVO">
+    SELECT
+      a.sentence_id AS dataId,
+      b.sentence AS sentence,
+      (SELECT c.label_desc FROM mf_label_info c WHERE task_id = a.task_id AND c.label_id = a.label_id) AS labeledLabel ,
+      (SELECT c.label_desc FROM mf_label_info c WHERE task_id = a.task_id AND c.label_id = b.label) AS originLabel
+    FROM
+      mf_rule_result a
+        LEFT JOIN mf_test_data b ON a.task_id = b.task_id AND b.data_type = 4
+        AND a.sentence_id = b.data_id
+    WHERE
+      a.task_id = #{po.taskId,jdbcType=BIGINT}
+      AND a.rule_id = #{po.ruleId,jdbcType=BIGINT}
+      AND a.label_id != -1
+      AND a.task_id = b.task_id
+      AND a.data_type = 4
+      AND a.label_id != b.label ORDER BY a.id
+  </select>
+
+  <select id="getUnCoverageByTaskId" resultType="com.wl.xc.modelfun.entities.vo.RuleMistakeVO">
+    SELECT a.data_id   AS dataId,
+           a.sentence,
+           a.label_des AS originLabel
+    FROM mf_test_data a
+    WHERE a.task_id = #{po.taskId,jdbcType=BIGINT}
+      AND a.data_id NOT IN (SELECT sentence_id
+                            FROM mf_rule_result b
+                            WHERE b.task_id = #{po.taskId,jdbcType=BIGINT}
+                              AND label_id > - 1
+                              AND b.data_type = 4
+                              AND b.rule_id IN (SELECT f.id
+                                                FROM mf_rule_info f
+                                                WHERE f.task_id = #{po.taskId,jdbcType=BIGINT}
+                                                  AND f.completed = 1)
+                            GROUP BY sentence_id)
+      AND a.data_type = 4
+    ORDER BY data_id
+  </select>
+
+  <select id="getUnCoverageByTaskIdAndRule" resultType="com.wl.xc.modelfun.entities.vo.RuleMistakeVO">
+    SELECT a.sentence_id AS dataId,
+           b.sentence,
+           b.label_des   AS originLabel
+    FROM mf_rule_result a
+           LEFT JOIN mf_test_data b ON a.task_id = b.task_id AND a.sentence_id = b.data_id AND b.data_type = 4
+    WHERE a.task_id = #{po.taskId,jdbcType=BIGINT}
+      AND a.rule_id = #{po.ruleId,jdbcType=BIGINT}
+      AND a.label_id = -1
+      AND a.data_type = 4
+    ORDER BY a.sentence_id
+  </select>
+
+  <select id="getUnCoverageForRegex" resultType="com.wl.xc.modelfun.entities.vo.RuleMistakeVO">
+    SELECT a.sentence_id AS dataId,
+           b.sentence,
+           b.label_des   AS originLabel
+    FROM mf_rule_result a
+           LEFT JOIN mf_test_data b ON a.task_id = b.task_id AND a.sentence_id = b.data_id AND b.data_type = 4
+    WHERE a.task_id = #{po.taskId,jdbcType=BIGINT}
+      AND a.rule_id = #{po.ruleId,jdbcType=BIGINT}
+      AND a.label_id = -1
+      AND a.data_type = 4
+      AND a.sentence_id IN (SELECT c.data_id
+                            FROM mf_test_data c
+                            WHERE c.task_id = #{po.taskId,jdbcType=BIGINT}
+                              AND c.data_type = 4
+                              AND c.label = #{po.labelId,jdbcType=INTEGER})
+    ORDER BY a.sentence_id
+  </select>
+
+
+
+  <select id="countLabeledSentence" resultType="java.lang.Integer">
+    SELECT COUNT(DISTINCT sentence_id)
+    FROM `mf_rule_result`
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+      AND label_id != -1
+      AND show_data = 1
+  </select>
+
+  <insert id="copyRuleResultFromTemplate">
+    INSERT INTO mf_rule_result(task_id, rule_id, sentence_id, label_id, show_data, data_type)
+    SELECT #{destTask,jdbcType=BIGINT}, #{destRule,jdbcType=BIGINT}, sentence_id, label_id, show_data, data_type
+    FROM mf_rule_result_template
+    WHERE task_id = #{srcTask,jdbcType=BIGINT}
+      AND rule_id = #{srcRule,jdbcType=BIGINT}
+  </insert>
+</mapper>

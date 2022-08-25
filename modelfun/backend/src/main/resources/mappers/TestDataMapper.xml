@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.TestDataMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.TestDataPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_test_data-->
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="task_id" jdbcType="BIGINT" property="taskId"/>
+    <result column="data_set_id" jdbcType="INTEGER" property="dataSetId"/>
+    <result column="data_id" jdbcType="BIGINT" property="dataId"/>
+    <result column="label" jdbcType="INTEGER" property="label"/>
+    <result column="sentence" jdbcType="LONGVARCHAR" property="sentence"/>
+    <result column="label_des" jdbcType="LONGVARCHAR" property="labelDes"/>
+    <result column="show_data" jdbcType="INTEGER" property="showData"/>
+    <result column="data_type" jdbcType="INTEGER" property="dataType"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, data_set_id, data_id, `label`, sentence, label_des, show_data, data_type
+  </sql>
+
+  <select id="groupCountLabelByTaskId" resultType="java.lang.Long">
+    SELECT COUNT(1)
+    from (SELECT label FROM mf_test_data WHERE (task_id = #{taskId,jdbcType=BIGINT}) AND data_type = 4 GROUP BY label) a
+  </select>
+
+  <select id="selectNoGptCache" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mf_test_data
+    WHERE (task_id = #{taskId,jdbcType=BIGINT})
+      AND show_data = #{show,jdbcType=INTEGER}
+      AND data_id NOT IN
+          (SELECT sentence_id FROM mf_gpt_cache WHERE task_id = #{taskId,jdbcType=BIGINT} AND data_type = 1)
+  </select>
+
+  <select id="pageTestData" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM mf_test_data
+    WHERE task_id = #{taskId,jdbcType=BIGINT} AND data_type = #{dataType,jdbcType=INTEGER}
+    ORDER BY data_id
+    LIMIT #{offset,jdbcType=BIGINT}, #{size,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insertAndAutoIncrement" parameterType="com.wl.xc.modelfun.entities.po.TestDataPO">
+    INSERT INTO mf_test_data
+    (task_id, data_set_id, data_id, `label`, sentence, label_des, show_data, data_type)
+    SELECT #{taskId,jdbcType=BIGINT},
+           #{dataSetId,jdbcType=INTEGER},
+           IF((SELECT MAX(data_id) + 1
+               FROM mf_test_data
+               WHERE task_id = #{taskId,jdbcType=BIGINT}
+                 AND data_type = #{dataType,jdbcType=INTEGER}) IS NULL, 0, (SELECT MAX(data_id) + 1
+                                                                            FROM mf_test_data
+                                                                            WHERE task_id = #{taskId,jdbcType=BIGINT}
+                                                                              AND data_type = #{dataType,jdbcType=INTEGER})),
+           #{label,jdbcType=INTEGER},
+           #{sentence,jdbcType=LONGVARCHAR},
+           #{labelDes,jdbcType=LONGVARCHAR},
+           #{showData,jdbcType=INTEGER},
+           #{dataType,jdbcType=INTEGER}
+  </insert>
+
+  <select id="getTrainCorrectData" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mf_test_data
+    WHERE task_id = #{taskId,jdbcType=BIGINT}
+      AND data_type = 5
+      AND data_id NOT IN
+          (SELECT data_id FROM mf_train_label_sentence_info WHERE train_record_id = #{trainRecordId,jdbcType=BIGINT})
+  </select>
+
+  <insert id="copyTestDataFromTemplate">
+    INSERT INTO mf_test_data
+    (task_id, data_set_id, data_id, `label`, sentence, label_des, show_data, data_type)
+    SELECT #{dest,jdbcType=BIGINT},
+           #{datasetId,jdbcType=INTEGER},
+           data_id,
+           `label`,
+           sentence,
+           label_des,
+           show_data,
+           data_type
+    FROM mf_test_data_template
+    WHERE task_id = #{src,jdbcType=BIGINT}
+  </insert>
+</mapper>

@@ -1,0 +1,7 @@
+tmpmodel/*
+datasets/*
+wandb/*
+.git/*
+uvicorn.*
+build/*
+build.zip

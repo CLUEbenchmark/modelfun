@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.NerTrainLabelResultMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.NerTrainLabelResultPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_ner_train_label_result-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="train_record_id" jdbcType="BIGINT" property="trainRecordId" />
+    <result column="label_des" jdbcType="VARCHAR" property="labelDes" />
+    <result column="train_precision" jdbcType="VARCHAR" property="trainPrecision" />
+    <result column="recall" jdbcType="VARCHAR" property="recall" />
+    <result column="samples" jdbcType="INTEGER" property="samples" />
+    <result column="error_count" jdbcType="INTEGER" property="errorCount" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, train_record_id, label_des, train_precision, recall, samples, error_count
+  </sql>
+
+  <select id="getTemplateByTrainRecordId" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM mf_ner_train_label_result_template
+    WHERE train_record_id = #{trainRecordId,jdbcType=BIGINT}
+  </select>
+</mapper>

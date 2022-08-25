@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.NerAutoLabelTrainMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.NerAutoLabelTrainPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_ner_auto_label_train-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="data_id" jdbcType="BIGINT" property="dataId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, data_id
+  </sql>
+
+  <insert id="copyDataFromTemplate">
+    INSERT INTO mf_ner_auto_label_train (task_id, data_id)
+    SELECT #{destTask,jdbcType=BIGINT}, data_id
+    FROM mf_ner_auto_label_train_template
+    WHERE task_id = #{srcTask,jdbcType=BIGINT}
+  </insert>
+</mapper>

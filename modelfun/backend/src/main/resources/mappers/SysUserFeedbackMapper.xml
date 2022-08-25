@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.SysUserFeedbackMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.SysUserFeedbackPO">
+    <!--@mbg.generated-->
+    <!--@Table sys_user_feedback-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="question" jdbcType="LONGVARCHAR" property="question" />
+    <result column="appendix1" jdbcType="VARCHAR" property="appendix1" />
+    <result column="appendix2" jdbcType="VARCHAR" property="appendix2" />
+    <result column="appendix3" jdbcType="VARCHAR" property="appendix3" />
+    <result column="appendix4" jdbcType="VARCHAR" property="appendix4" />
+    <result column="question_status" jdbcType="INTEGER" property="questionStatus" />
+    <result column="answer" jdbcType="LONGVARCHAR" property="answer" />
+    <result column="answer_people" jdbcType="INTEGER" property="answerPeople" />
+    <result column="remark" jdbcType="LONGVARCHAR" property="remark" />
+    <result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+    <result column="update_datetime" jdbcType="TIMESTAMP" property="updateDatetime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, user_id, question, appendix1, appendix2, appendix3, appendix4, question_status, 
+    answer, answer_people, remark, create_datetime, update_datetime
+  </sql>
+</mapper>

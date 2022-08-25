@@ -1,0 +1,11 @@
+requests 
+oss2 
+fastapi 
+uvicorn[standard]
+bidict 
+minio 
+pynvml
+wandb
+paddlenlp>=2.0.0rc
+setuptools_scm
+seqeval==1.2.2

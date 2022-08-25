@@ -1,0 +1,96 @@
+services:
+  front:
+    image: modelfun/front
+    restart: always
+    ports:
+      - "80:80"
+    container_name: front
+    networks:
+      - modelfun
+    depends_on:
+      - backend
+  mysql:
+    image: mysql:8.0.29
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: modelfun
+      MYSQL_USER: modelfun
+      MYSQL_PASSWORD: modelfun
+    networks:
+      - modelfun
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_general_ci
+    volumes:
+      - /opt/containers/mysql/data:/var/lib/mysql
+      - /opt/containers/mysql/log:/var/log/mysql
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - /data/minio:/data
+    networks:
+      - modelfun
+    environment:
+      - MINIO_ROOT_USER=minio-root-user
+      - MINIO_ROOT_PASSWORD=minio-root-password
+      - MINIO_DEFAULT_BUCKETS=modelfun
+    command: server /data --console-address ":9001" --address ":9000"
+  redis:
+    image: redis:6.2.7
+    container_name: redis
+    restart: always
+    networks:
+      - modelfun
+    ports:
+      - "6379:6379"
+    volumes:
+      - /opt/containers/redis/data:/data
+      - /opt/containers/redis/log:/var/log/redis
+      
+    command: redis-server 
+  backend:
+    image: modelfun/backend
+    container_name: backend
+    restart: always
+    volumes:
+      - /opt/containers/backend/config:/etc/app/config
+      - /opt/containers/backend/log:/var/log/backend
+    ports:
+      - "8080:8080"
+    networks:
+      - modelfun
+    depends_on:
+      - mysql
+      - redis
+      - minio
+  alg:
+    image: modelfun/alg
+    container_name: alg
+    restart: always
+    ports:
+      - "6674:6674"
+    networks:
+      - modelfun
+    depends_on:
+      - minio
+  paddlealg:
+    image: modelfun/paddlealg
+    container_name: paddlealg
+    restart: always
+    ports:
+      - "6685:6685"
+    networks:
+      - modelfun
+    depends_on:
+      - minio
+networks:
+  modelfun:

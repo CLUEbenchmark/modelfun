@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wl.xc.modelfun.mapper.IntegrateLabelResultMapper">
+  <resultMap id="BaseResultMap" type="com.wl.xc.modelfun.entities.po.IntegrateLabelResultPO">
+    <!--@mbg.generated-->
+    <!--@Table mf_integrate_label_result-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="dataset_id" jdbcType="BIGINT" property="datasetId" />
+    <result column="sentence_id" jdbcType="BIGINT" property="sentenceId" />
+    <result column="sentence" jdbcType="LONGVARCHAR" property="sentence" />
+    <result column="label_id" jdbcType="INTEGER" property="labelId" />
+    <result column="label_des" jdbcType="VARCHAR" property="labelDes" />
+    <result column="op_status" jdbcType="INTEGER" property="opStatus" />
+    <result column="used" jdbcType="TINYINT" property="used" />
+    <result column="data_type" jdbcType="INTEGER" property="dataType" />
+  </resultMap>
+  
+  <resultMap id="ResultForAuto" type="com.wl.xc.modelfun.entities.po.SimpleAutoLabelResult">
+    <result column="sentence" javaType="String" property="sentence" />
+    <result column="label_id" javaType="String" property="label" />
+    <result column="label_des" javaType="String" property="labelDes" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, task_id, dataset_id, sentence_id, sentence, label_id, label_des, op_status, used, data_type
+  </sql>
+
+  <select id="selectPageByTaskIdAndKeyword" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM mf_integrate_label_result
+    WHERE task_id = #{po.taskId,jdbcType=BIGINT} AND data_type = #{po.dataType,jdbcType=INTEGER}
+    <if test="po.sentence != null and po.sentence != ''">
+      AND sentence LIKE CONCAT('%',#{po.sentence,jdbcType=LONGNVARCHAR},'%')
+    </if>
+    <if test="po.labelId != null">
+      AND label_id = #{po.labelId,jdbcType=INTEGER}
+    </if>
+    ORDER BY sentence_id
+  </select>
+
+  <select id="pageLabelCorrectByTaskId" resultType="com.wl.xc.modelfun.entities.po.AutoLabelResultPO">
+    SELECT a.sentence_id AS id, a.label_id AS `label`
+    FROM mf_integrate_label_result a
+    WHERE a.task_id = #{taskId,jdbcType=BIGINT} AND a.data_type = 1
+    ORDER BY a.sentence_id
+    LIMIT #{offset,jdbcType=BIGINT}, #{size,jdbcType=INTEGER}
+  </select>
+
+  <select id="pageCorrectByTaskId" resultMap="ResultForAuto">
+    SELECT <include refid="Base_Column_List" />
+    FROM mf_integrate_label_result
+    WHERE task_id = #{taskId,jdbcType=BIGINT} AND data_type = 1
+    ORDER BY id
+    LIMIT #{offset,jdbcType=BIGINT}, #{size,jdbcType=INTEGER}
+  </select>
+
+  <select id="countLabelByTaskId" resultType="int">
+    SELECT count(1)
+    FROM (SELECT label_id
+          FROM mf_integrate_label_result
+          WHERE task_id = #{taskId,jdbcType=BIGINT}
+          GROUP BY label_id) a
+  </select>
+
+  <insert id="copyAutoLabelResultFromTemplate">
+    INSERT INTO mf_integrate_label_result (task_id, dataset_id, sentence_id, sentence, label_id, label_des, op_status,
+                                           used, data_type)
+    SELECT #{destTask,jdbcType=BIGINT},
+           #{datasetId,jdbcType=INTEGER},
+           sentence_id,
+           sentence,
+           label_id,
+           label_des,
+           op_status,
+           used,
+           data_type
+    FROM mf_integrate_label_result_template
+    WHERE task_id = #{srcTask,jdbcType=BIGINT}
+  </insert>
+</mapper>
